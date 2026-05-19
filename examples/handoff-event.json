@@ -1,0 +1,9 @@
+{
+  "event_type": "handoff.created",
+  "actor": "marlow",
+  "summary": "Review the CS003 article before publish",
+  "payload": {
+    "handoff_id": "hnd_123",
+    "target": "saul"
+  }
+}

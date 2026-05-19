@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=scripts/_telepathy_lib.sh
+source "$SCRIPT_DIR/_telepathy_lib.sh"
+require_db
+
+sqlite3 "$TELEPATHY_DB" "SELECT 1 FROM team_events LIMIT 1;" >/dev/null
+sqlite3 "$TELEPATHY_DB" "SELECT 1 FROM event_acknowledgements LIMIT 1;" >/dev/null
+echo "OK Agent Telepathy event store is ready"
+echo "DB: $TELEPATHY_DB"

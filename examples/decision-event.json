@@ -1,0 +1,9 @@
+{
+  "event_type": "decision.created",
+  "actor": "saul",
+  "summary": "Use static visuals for the launch post",
+  "payload": {
+    "surface": "linkedin",
+    "repo": "agent-telepathy"
+  }
+}

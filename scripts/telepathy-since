@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=scripts/_telepathy_lib.sh
+source "$SCRIPT_DIR/_telepathy_lib.sh"
+require_db
+
+agent="${1:-}"
+if [[ -z "$agent" ]]; then
+  echo "Usage: telepathy-since <agent>" >&2
+  exit 1
+fi
+
+sqlite3 -header -column "$TELEPATHY_DB" "
+SELECT e.id, e.created_at, e.event_type, e.actor, e.summary
+FROM team_events e
+LEFT JOIN event_acknowledgements a
+  ON a.event_id = e.id AND a.agent_name = '$(sql_escape "$agent")'
+WHERE e.project = '$(sql_escape "$TELEPATHY_PROJECT")'
+  AND a.event_id IS NULL
+ORDER BY e.created_at ASC;
+"

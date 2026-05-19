@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=scripts/_telepathy_lib.sh
+source "$SCRIPT_DIR/_telepathy_lib.sh"
+require_db
+
+limit="${1:-10}"
+sqlite3 -header -column "$TELEPATHY_DB" "
+SELECT id, created_at, event_type, actor, summary
+FROM team_events
+WHERE project = '$(sql_escape "$TELEPATHY_PROJECT")'
+ORDER BY created_at DESC
+LIMIT $(printf "%s" "$limit" | tr -cd '0-9');
+"
